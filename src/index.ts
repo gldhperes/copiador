@@ -1,6 +1,7 @@
-import {Command} from 'commander'
+import { Command } from 'commander'
 
-import {exportCommand} from './commands/export'
+import { exportCommand } from './commands/export'
+import { umlCommand } from './commands/uml'
 
 const program = new Command();
 
@@ -15,5 +16,12 @@ program
         'Gera o arquivo project-context.md'
     )
     .action(exportCommand);
+
+program
+    .command('uml')
+    .description(
+        'Gera o arquivo UML.md'
+    )
+    .action(umlCommand);
 
 program.parse();
