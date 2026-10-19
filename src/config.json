@@ -1,8 +1,6 @@
 {
     "path": "C:\\Users\\gldhp\\Unity Projects\\Abyss Hunters\\Assets\\_Project",
-    "extensions": [
-        ".cs"
-    ],
-    "className": "",
-    "connectionDepth": ""
+    "extensions": [".cs"],
+    "className": "RPC_Teste",
+    "connectionDepth": 1
 }
