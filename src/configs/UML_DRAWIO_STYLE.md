@@ -280,7 +280,7 @@ Não alterar a informação original apenas por motivos estéticos.
 
 ## 10. Conteúdo excessivo
 
-Quando uma classe possuir uma quantidade muito grande de membros, o gerador pode resumir visualmente o conteúdo para evitar blocos gigantes.
+Quando uma classe possuir uma quantidade muito grande de membros, o gerador NÃO pode resumir visualmente o conteúdo para evitar blocos gigantes. Tem que ser responsivo e mostrar tudo.
 
 Exemplo:
 
@@ -317,7 +317,7 @@ O diagrama deve ser visualmente limpo, profissional e fácil de navegar.
 
 Prioridades, em ordem:
 
-1. **Nenhuma seta atravessando blocos.**
+1. **NENHUMA seta atravessando blocos.**
 2. **Boa separação entre os blocos.**
 3. **Redução de cruzamentos.**
 4. **Classes relacionadas próximas.**

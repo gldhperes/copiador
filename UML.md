@@ -35,106 +35,18 @@ Funções:
 
 Conexões:
 
-**## BuildDebugBootstrap**
+**## TimeScheduler**
 
 Variaveis:
-  + OwnedEquipments: List<OwnedEquipmentData>;
-  + OwnedRunes: List<OwnedRuneData>;
-  + OwnedConsumables: List<OwnedConsumableData>;
-  + Builds: List<BuildDebugData>;
+  - _cancellationTokenSource: readonly CancellationTokenSource;
+  - _callback: Action;
+  - _processTask: Task;
 
 Funções:
-  - Header()
-  + new()
-  - Header()
-  + new()
-  - Header()
-  + new()
-  - Header()
-  + new()
-
-Conexões:
-  BuildDebugData,
-  EquipmentDatabase,
-  RuneDatabase,
-  ConsumableDatabase,
-  OwnedConsumableData,
-  OwnedEquipmentData,
-  OwnedRuneData,
-
-**## BuildDebugData**
-
-Variaveis:
-  + BuildName: string;
-  + EquippedEquipments: List<EquipmentSlotData>;
-  + EquippedRunes: List<RuneSlotData>;
-
-Funções:
-  + new()
-  + new()
-  + new()
-
-Conexões:
-  ConsumableSlotData,
-  EquipmentSlotData,
-  RuneSlotData,
-
-**## BuildDebugRunner**
-
-Variaveis:
-  - _bootstrap: BuildDebugBootstrap;
-  - _buildService: PlayerBuildService;
-
-Funções:
-  - Awake()
-  - ContextMenu()
-  + PopulateProfile()
-  - ContextMenu()
-  + CreateBuilds()
-  - ContextMenu()
-  + PrintBuilds()
-
-Conexões:
-  BuildDebugBootstrap,
-  EquipmentDatabase,
-  BuildValidationService,
-  PlayerBuildService,
-  EquipmentRepository,
-  RuneRepository,
-  RuneDatabase,
-  PlayerProfileRuntime,
-
-**## NetworkSingleton**
-
-Variaveis:
-
-Funções:
-  + Spawned()
-  + Despawned()
-
-Conexões:
-
-**## NetworkPlayerManager**
-
-Variaveis:
-  - spawnPointName: [SerializeField] private string;
-  + playerCount: int;
-  - _players: readonly Dictionary<PlayerRef, NetworkObject>;
-  - cachedSpawnPoint: [SerializeField] private GameObject;
-  - cachedSpawnPointSearched: [SerializeField] private bool;
-
-Funções:
-  - Header()
-  - Header()
-  - Header()
-  - new()
-  - OnEnable()
-  - SearchPlayerSpawnPoint()
-  + SpawnPlayer()
-  + GetPlayerObject()
-  + DespawnPlayer()
-  + GetPlayerCount()
-  + ClearSpawnPointCache()
+  + TimeScheduler()
+  - RunAsync()
+  + Cancel()
+  + Dispose()
 
 Conexões:
 
@@ -218,21 +130,6 @@ Funções:
 
 Conexões:
 
-**## TimeScheduler**
-
-Variaveis:
-  - _cancellationTokenSource: readonly CancellationTokenSource;
-  - _callback: Action;
-  - _processTask: Task;
-
-Funções:
-  + TimeScheduler()
-  - RunAsync()
-  + Cancel()
-  + Dispose()
-
-Conexões:
-
 **## IInteractable**
 
 Variaveis:
@@ -297,7 +194,6 @@ Funções:
   + GetTransform()
   + GetProgress()
   - Header()
-  - Header()
   - new()
   + Spawned()
   + Render()
@@ -337,7 +233,6 @@ Variaveis:
 Funções:
   - new()
   + Add()
-  + Add()
   + IsEmpty()
   + Clear()
 
@@ -353,13 +248,152 @@ Variaveis:
 Funções:
   + RewardService()
   + Apply()
-  + Apply()
 
 Conexões:
   RewardEntry,
   RewardResult,
   IItemRepository,
   InventoryService,
+
+**## NetworkPlayerManager**
+
+Variaveis:
+  - _playerRuntimeRegistry: PlayerRuntimeRegistry;
+  - spawnPointName: string;
+  - cachedSpawnPoint: GameObject;
+  - playerCount: int;
+  - _players: readonly Dictionary<PlayerRef, PlayerSessionData>;
+  - _playersDebug: List<PlayerDebugEntry>;
+  + PlayerCount: int;
+
+Funções:
+  - Header()
+  - new()
+  - OnEnable()
+  + OnSceneLoaded()
+  + SetRuntimeRegistry()
+  + ResetSession()
+  - SearchPlayerSpawnPoint()
+  + SpawnPlayer()
+  + DespawnPlayer()
+  + GetPlayerObject()
+  + GetPlayerCount()
+  - RefreshDebugPlayers()
+
+Conexões:
+  PlayerSessionData,
+  PlayerDebugEntry,
+  PlayerRuntimeRegistry,
+  BuildCalculationService,
+  GameServices,
+  PlayerRoot,
+  PlayerBuildLoader,
+  PlayerProfileData,
+
+**## PlayerSessionData**
+
+Variaveis:
+  + PlayerRef: PlayerRef;
+  + NetworkObject: NetworkObject;
+
+Funções:
+
+Conexões:
+
+**## PlayerDebugEntry**
+
+Variaveis:
+  + NetworkObject: NetworkObject;
+  + PlayerSessionData: PlayerSessionData;
+
+Funções:
+
+Conexões:
+  PlayerSessionData,
+
+**## PlayerRuntimeRegistry**
+
+Variaveis:
+  - _profiles: readonly Dictionary<PlayerRef, PlayerProfileData>;
+  - _profilesDebug: List<PlayerRuntimeDebugEntry>;
+
+Funções:
+  - new()
+  - Header()
+  + Unregister()
+  + ResetSession()
+  - RefreshDebug()
+
+Conexões:
+  PlayerRuntimeDebugEntry,
+  PlayerProfileData,
+
+**## PlayerRuntimeDebugEntry**
+
+Variaveis:
+  + Player: PlayerRef;
+  + Profile: PlayerProfileData;
+
+Funções:
+
+Conexões:
+  PlayerProfileData,
+
+**## BuildDebugBootstrap**
+
+Variaveis:
+  + OwnedEquipments: List<OwnedEquipmentData>;
+  + OwnedRunes: List<OwnedRuneData>;
+  + OwnedConsumables: List<OwnedConsumableData>;
+  + Builds: List<BuildDebugData>;
+
+Funções:
+  - Header()
+  + new()
+
+Conexões:
+  BuildDebugData,
+  EquipmentDatabase,
+  RuneDatabase,
+  ConsumableDatabase,
+  OwnedConsumableData,
+  OwnedEquipmentData,
+  OwnedRuneData,
+
+**## BuildDebugData**
+
+Variaveis:
+  + EquippedEquipments: List<EquipmentSlotData>;
+  + EquippedRunes: List<RuneSlotData>;
+  + EquippedConsumables: List<ConsumableSlotData>;
+
+Funções:
+  + new()
+
+Conexões:
+  ConsumableSlotData,
+  EquipmentSlotData,
+  RuneSlotData,
+
+**## BuildDebugRunner**
+
+Variaveis:
+  - _bootstrap: BuildDebugBootstrap;
+
+Funções:
+  - Awake()
+
+Conexões:
+  NetworkPlayerManager,
+  BuildDebugBootstrap,
+  EquipmentDatabase,
+  BuildValidationService,
+  PlayerBuildService,
+  GameServices,
+  EquipmentRepository,
+  RuneRepository,
+  RuneDatabase,
+  PlayerRoot,
 
 **## SceneSwitcherOverlay**
 
@@ -403,7 +437,6 @@ Variaveis:
 
 Funções:
   - new()
-  - new()
   - Header()
   - Awake()
   - OnDestroy()
@@ -436,10 +469,7 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
-  - Header()
   - Range()
-  - Header()
   + IsValid()
 
 Conexões:
@@ -470,11 +500,57 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
   - new()
 
 Conexões:
   DropEntryDefinition,
+
+**## GatherableDatabase**
+
+Variaveis:
+  + Gatherables: List<GatherableData>;
+  - _lookup: Dictionary<GatherableType, GatherableData>;
+
+Funções:
+  + Init()
+  + Get()
+
+Conexões:
+  GatherableData,
+
+**## ItemDatabase**
+
+Variaveis:
+  - items: [SerializeField] private List<ItemDefinition>;
+  - _itemsById: Dictionary<string, ItemDefinition>;
+
+Funções:
+  - new()
+  - OnEnable()
+  - BuildLookup()
+  + GetById()
+  + TryGet()
+  + Contains()
+  + GetAll()
+
+Conexões:
+  ItemDefinition,
+
+**## ItemDefinition**
+
+Variaveis:
+  + Id: string;
+  + DisplayName: string;
+  - Description: [TextArea] public string;
+  + Icon: Sprite;
+  + Type: ItemType;
+  + Rarity: ItemRarity;
+  + MaxStack: int;
+
+Funções:
+  - Header()
+
+Conexões:
 
 **## ArmorDefinition**
 
@@ -521,17 +597,6 @@ Variaveis:
   + IntrinsicPerks: List<PerkDefinition>;
 
 Funções:
-  - Header()
-  - Header()
-  - Header()
-  - Header()
-  + new()
-  - Header()
-  + new()
-  - Header()
-  - Header()
-  - Header()
-  + new()
   - Header()
   + new()
 
@@ -625,15 +690,7 @@ Variaveis:
 Funções:
   - Header()
   + new()
-  - Header()
   - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Header()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Header()
 
 Conexões:
   DamageEntry,
@@ -647,7 +704,6 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
   + GetAttackData()
 
 Conexões:
@@ -659,56 +715,6 @@ Variaveis:
   + WeaponType: WeaponType;
 
 Funções:
-  - Header()
-
-Conexões:
-
-**## GatherableDatabase**
-
-Variaveis:
-  + Gatherables: List<GatherableData>;
-  - _lookup: Dictionary<GatherableType, GatherableData>;
-
-Funções:
-  + Init()
-  + Get()
-
-Conexões:
-  GatherableData,
-
-**## ItemDatabase**
-
-Variaveis:
-  - items: [SerializeField] private List<ItemDefinition>;
-  - _itemsById: Dictionary<string, ItemDefinition>;
-
-Funções:
-  - new()
-  - OnEnable()
-  - BuildLookup()
-  + GetById()
-  + TryGet()
-  + Contains()
-  + GetAll()
-
-Conexões:
-  ItemDefinition,
-
-**## ItemDefinition**
-
-Variaveis:
-  + Id: string;
-  + DisplayName: string;
-  - Description: [TextArea] public string;
-  + Icon: Sprite;
-  + Type: ItemType;
-  + Rarity: ItemRarity;
-  + MaxStack: int;
-
-Funções:
-  - Header()
-  - Header()
-  - Header()
   - Header()
 
 Conexões:
@@ -745,6 +751,7 @@ Conexões:
 **## BuildCalculationService**
 
 Variaveis:
+  - profile: PlayerProfileData;
 
 Funções:
   + Recalculate()
@@ -754,15 +761,14 @@ Funções:
   - CalculateConsumables()
 
 Conexões:
-  EquipmentService,
   GameServices,
+  EquipmentService,
   PerkService,
   RuneService,
-  PlayerProfileRuntime,
   PlayerBaseStats,
   BuildStatContext,
-  ConsumableService,
   ConsumableDefinition,
+  ConsumableService,
   BuildPerkContext,
   BuildConsumableContext,
   PlayerBuildData,
@@ -777,9 +783,6 @@ Conexões:
 **## BuildValidationService**
 
 Variaveis:
-  - _builds: readonly PlayerBuildCollectionData;
-  - _equipments: readonly PlayerEquipmentData;
-  - _runes: readonly PlayerRuneData;
   - _equipmentRepository: readonly IEquipmentRepository;
   - _runeRepository: readonly IRuneRepository;
 
@@ -794,17 +797,13 @@ Funções:
 Conexões:
   IEquipmentRepository,
   IRuneRepository,
-  PlayerProfileRuntime,
-  PlayerBuildCollectionData,
   PlayerBuildData,
-  PlayerEquipmentData,
-  PlayerRuneData,
+  PlayerProfileData,
   RuneSlotData,
 
 **## PlayerBuildService**
 
 Variaveis:
-  - _builds: readonly PlayerBuildCollectionData;
   - _validationService: readonly BuildValidationService;
 
 Funções:
@@ -823,9 +822,8 @@ Funções:
 
 Conexões:
   BuildValidationService,
-  PlayerProfileRuntime,
-  PlayerBuildCollectionData,
   PlayerBuildData,
+  PlayerProfileData,
   EquipmentSlotData,
   RuneSlotData,
 
@@ -833,15 +831,18 @@ Conexões:
 
 Variaveis:
   - _itemRepository: readonly IItemRepository;
+  - _dropTableRepository: readonly IDropTableRepository;
 
 Funções:
   + DropService()
+  + GetById()
   + Roll()
 
 Conexões:
   RewardResult,
   DropEntryDefinition,
   DropTableDefinition,
+  IDropTableRepository,
   IItemRepository,
 
 **## DropTableRepository**
@@ -869,6 +870,65 @@ Funções:
 Conexões:
   DropTableDefinition,
 
+**## GameServices**
+
+Variaveis:
+
+Funções:
+  + Spawned()
+  + Initialize()
+  - InitializeRepositorys()
+  - InitializeSettingsServices()
+
+Conexões:
+  RewardService,
+  DropTableDatabase,
+  ItemDatabase,
+  EquipmentDatabase,
+  EquipmentProgressionDatabase,
+  BehemothRepository,
+  IBehemothRepository,
+  BuildCalculationService,
+  BuildValidationService,
+  PlayerBuildService,
+  DropService,
+  DropTableRepository,
+  IDropTableRepository,
+  DatabasePaths,
+  EquipmentRepository,
+  EquipmentService,
+  IEquipmentRepository,
+  PerkService,
+  ItemRepository,
+  IRuneRepository,
+  RuneRepository,
+  RuneService,
+  DisplaySettingsService,
+  BehemothDatabase,
+  RuneDatabase,
+  CombatDamageService,
+  InventoryService,
+  ConsumableDatabase,
+  ConsumableRepository,
+  ConsumableService,
+  IConsumableRepository,
+
+**## DatabasePaths**
+
+Variaveis:
+  - database: const string;
+  + Item: const string;
+  + Equipment: const string;
+  + EquipmentProgression: const string;
+  + Rune: const string;
+  + Consumable: const string;
+  + Behemoth: const string;
+  + DropTable: const string;
+
+Funções:
+
+Conexões:
+
 **## EquipmentRepository**
 
 Variaveis:
@@ -886,13 +946,13 @@ Conexões:
 **## EquipmentService**
 
 Variaveis:
-  - _equipmentData: readonly PlayerEquipmentData;
   - _database: readonly IEquipmentRepository;
   - _progression: readonly EquipmentProgressionDatabase;
 
 Funções:
   + EquipmentService()
   + HasEquipment()
+  - TryGetPlayerquipamentData()
   + UnlockEquipment()
   + TryGetEquipment()
   + GetEquipmentLevel()
@@ -912,10 +972,10 @@ Conexões:
   EquipmentProgressionLevelData,
   WeaponData,
   IEquipmentRepository,
-  PlayerProfileRuntime,
   BuildStatContext,
   OwnedEquipmentData,
   PlayerEquipmentData,
+  PlayerProfileData,
   EquipmentSlotData,
 
 **## IEquipmentRepository**
@@ -929,57 +989,27 @@ Funções:
 Conexões:
   EquipmentDefinition,
 
-**## GameServices**
+**## PerkService**
 
 Variaveis:
 
 Funções:
-  - Awake()
-  - InitializeRepositorys()
-  - InitializeSettingsServices()
+  + ApplyIntrinsicPerks()
+  - ApplyPerkStat()
+  - ApplyEffectStat()
 
 Conexões:
-  EquipmentDatabase,
-  EquipmentProgressionDatabase,
-  ItemDatabase,
-  BehemothRepository,
-  BuildCalculationService,
-  BuildValidationService,
-  PlayerBuildService,
-  DropService,
-  EquipmentRepository,
+  EquipmentDefinition,
+  EquipmentProgressionLevelData,
+  GameServices,
   EquipmentService,
-  IEquipmentRepository,
-  DatabasePaths,
-  ItemRepository,
-  PerkService,
-  IRuneRepository,
-  RuneRepository,
-  RuneService,
-  DisplaySettingsService,
-  BehemothDatabase,
-  RuneDatabase,
-  CombatDamageService,
-  ConsumableRepository,
-  ConsumableService,
-  IConsumableRepository,
-  ConsumableDatabase,
-
-**## DatabasePaths**
-
-Variaveis:
-  - database: const string;
-  + Item: const string;
-  + Equipment: const string;
-  + EquipmentProgression: const string;
-  + Rune: const string;
-  + Consumable: const string;
-  + Behemoth: const string;
-  + DropTable: const string;
-
-Funções:
-
-Conexões:
+  PerkDefinition,
+  BuildStatContext,
+  ConditionData,
+  EffectData,
+  EffectDefinition,
+  BuildPerkContext,
+  PlayerProfileData,
 
 **## IItemRepository**
 
@@ -1010,26 +1040,34 @@ Conexões:
   ItemDatabase,
   ItemDefinition,
 
-**## PerkService**
+**## RPC_Teste**
 
 Variaveis:
 
 Funções:
-  + ApplyIntrinsicPerks()
-  - ApplyPerkStat()
-  - ApplyEffectStat()
+  - Rpc()
+  + RPC_SetPlayerActiveBuildResult()
+  + RPC_SetPlayerActiveBuild()
+  - UpdateLocalBuild()
+  + RPC_EquipAnEquipment()
+  + RPC_PlayerEquipAnEquipment()
+  + RPC_UnequipAnEquipment()
+  + RPC_PlayerUnequipAnEquipment()
+  + RPC_EquipRune()
+  + RPC_PlayerEquipRune()
+  + RPC_UnequipRune()
+  + RPC_PlayerUnequipRune()
 
 Conexões:
   EquipmentDefinition,
-  EquipmentProgressionLevelData,
-  EquipmentService,
+  BuildCalculationService,
   GameServices,
-  PerkDefinition,
-  BuildStatContext,
-  ConditionData,
-  EffectData,
-  EffectDefinition,
-  BuildPerkContext,
+  EquipmentService,
+  PlayerRoot,
+  PlayerBuildLoader,
+  ConnectionHandler,
+  PlayerBuildData,
+  PlayerProfileData,
 
 **## IRuneRepository**
 
@@ -1070,10 +1108,10 @@ Conexões:
   IRuneRepository,
   PerkDefinition,
   RuneDefinition,
-  PlayerProfileRuntime,
   BuildStatContext,
   BuildPerkContext,
   OwnedRuneData,
+  PlayerProfileData,
 
 **## DisplaySettingsService**
 
@@ -1102,111 +1140,36 @@ Funções:
 
 Conexões:
 
-**## ConnectionHandler**
+**## BehemothPartConfig**
 
 Variaveis:
-  - runnerPrefab: [SerializeField, ReadOnly] private NetworkRunner;
-  - runner: [SerializeField, ReadOnly] private NetworkRunner;
-  - localPlayerInput: [SerializeField, ReadOnly] private PlayerInputHandler;
-  - networkEvents: [SerializeField, ReadOnly] private NetworkEvents;
-  - cachedInputData: [SerializeField, ReadOnly] private NetworkInputData;
+  + PartDamageMultipliers: List<DamageMultiplierEntry>;
 
 Funções:
-  + LoadScene()
-  - Awake()
-  + StartConnectionAsync()
-  - OnShutdownEventListener()
-  + DisconnectAsync()
-  + SetLocalPlayerInput()
-  + OnPlayerJoined()
-  + OnPlayerLeft()
-  + OnInput()
-  + OnInputMissing()
-  + OnShutdown()
-  + OnConnectFailed()
-  + OnReliableDataReceived()
-  + OnReliableDataProgress()
-  + OnConnectedToServer()
-  + OnDisconnectedFromServer()
-  + OnConnectRequest()
-  + OnUserSimulationMessage()
-  + OnSessionListUpdated()
-  + OnCustomAuthenticationResponse()
-  + OnHostMigration()
-  + OnReliableDataReceived()
-  + OnSceneLoadDone()
-  + OnSceneLoadStart()
-  + OnObjectExitAOI()
-  + OnObjectEnterAOI()
-  + OnReliableDataProgress()
+  + GetDamageMultiplier()
 
 Conexões:
-  NetworkPlayerManager,
-  PlayerInputHandler,
-  PlayerInputHandler,
-  NetworkInputData,
+  DamageMultiplierEntry,
+  DamageTypeMultiplier,
 
-**## InitializationHandler**
+**## DamageMultiplierEntry**
 
 Variaveis:
-  - _defaultLobbyName: [SerializeField] private string;
-  - _lobbyMaxPlayers: [SerializeField] private int;
-  - _initializeAsServer: [SerializeField] private bool;
+  + PartType: BehemothPartType;
+  + DamageTypeMultipliers: List<DamageTypeMultiplier>;
 
 Funções:
-  - Header()
-  - Header()
-  - Start()
-  + CheckAndStartConnection()
-  - CreateStartGameArgs()
-  - DetermineGameMode()
 
 Conexões:
-  ConnectionHandler,
+  DamageTypeMultiplier,
 
-**## LobbyInputController**
-
-Variaveis:
-  - _matchmakingHandler: [SerializeField] private MatchmakingHandler;
-  + targetIsland: IslandType;
-  + targetMode: GameModeType;
-  + isPublic: bool;
-  + started: bool;
-
-Funções:
-  - Header()
-  - Awake()
-
-Conexões:
-  MatchmakingHandler,
-
-**## MatchmakingHandler**
+**## DamageTypeMultiplier**
 
 Variaveis:
-  + OnHuntRequest: static Action<bool, IslandType, GameModeType>;
-  - _connectionHandler: [SerializeField] private ConnectionHandler;
-  - _matchmakingService: [SerializeField] private MatchmakingService;
-  - _huntMaxPlayers: [SerializeField] private int;
+  + Type: DamageType;
+  + Multiplier: float;
 
 Funções:
-  - Header()
-  - Header()
-  - Awake()
-  - OnDestroy()
-  + Spawned()
-  + RequestHunt()
-
-Conexões:
-  ConnectionHandler,
-  MatchmakingService,
-
-**## MatchmakingService**
-
-Variaveis:
-
-Funções:
-  + CreateHuntSessionArgs()
-  - GetSceneIndex()
 
 Conexões:
 
@@ -1230,11 +1193,7 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
   - new()
-  - Header()
-  - Header()
-  - Header()
   + Spawned()
   + Init()
   + FixedUpdateNetwork()
@@ -1260,7 +1219,7 @@ Conexões:
   RewardResult,
   RewardService,
   DropService,
-  DropTableRepository,
+  GameServices,
   BehemothDefinition,
   BehemothHitbox,
   BehemothPart,
@@ -1315,13 +1274,7 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
-  - Header()
-  - Header()
-  - Header()
-  - Header()
   - Range()
-  - Header()
 
 Conexões:
 
@@ -1368,8 +1321,6 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
-  - OnChangedRender()
   - OnChangedRender()
   + Spawned()
   + InitializePartHealth()
@@ -1386,41 +1337,71 @@ Conexões:
   RewardService,
   DropService,
   DropTableRepository,
+  GameServices,
   BehemothController,
   HuntManager,
 
-**## BehemothPartConfig**
+**## PerkData**
 
 Variaveis:
-  + PartDamageMultipliers: List<DamageMultiplierEntry>;
+  + InitialValue: int;
+  + ValueAP: int;
+  + ValueType: ValueType;
 
 Funções:
-  + GetDamageMultiplier()
+  - Header()
+  - Tooltip()
+  + GetValueByLevel()
 
 Conexões:
-  DamageMultiplierEntry,
-  DamageTypeMultiplier,
 
-**## DamageMultiplierEntry**
+**## PerkDefinition**
 
 Variaveis:
-  + PartType: BehemothPartType;
-  + DamageTypeMultipliers: List<DamageTypeMultiplier>;
+  + Id: string;
+  + DisplayName: string;
+  + Description: string;
+  + Icon: Sprite;
+  - Max_Level: [SerializeField][ReadOnly] int;
+  + ConditionData: ConditionData;
+  + EffectDefinition: EffectDefinition;
+  + EffectData: EffectData;
 
 Funções:
+  - Tooltip()
+  - Header()
 
 Conexões:
-  DamageTypeMultiplier,
+  ConditionData,
+  EffectData,
+  EffectDefinition,
 
-**## DamageTypeMultiplier**
+**## RuneDatabase**
 
 Variaveis:
-  + Type: DamageType;
-  + Multiplier: float;
+  + Runes: List<RuneDefinition>;
 
 Funções:
+  + new()
 
 Conexões:
+  RuneDefinition,
+
+**## RuneDefinition**
+
+Variaveis:
+  + Id: string;
+  + DisplayName: string;
+  + Description: string;
+  + Icon: Sprite;
+  + SlotType: RuneSlotType;
+  + Perk: PerkDefinition;
+
+Funções:
+  - Tooltip()
+
+Conexões:
+  PerkDefinition,
 
 **## CameraShake**
 
@@ -1458,9 +1439,6 @@ Variaveis:
 Funções:
   - Header()
   + Vector3()
-  - Header()
-  - Header()
-  - Header()
   - LateUpdate()
   - HandleInput()
   - CalculatePosition()
@@ -1469,100 +1447,120 @@ Funções:
 Conexões:
   PlayerMovement,
 
-**## PerkData**
+**## AttackDamageModifier**
 
 Variaveis:
-  + InitialValue: int;
-  + ValueAP: int;
-  + ValueType: ValueType;
 
 Funções:
-  - Header()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  + GetValueByLevel()
+  + Calculate()
+  + ResolvePerks()
 
 Conexões:
+  CombatPerkInstance,
+  ICondition,
+  EffectDefinition,
+  PlayerBuildStats,
 
-**## PerkDefinition**
+**## CriticalChanceModifier**
 
 Variaveis:
-  + Id: string;
-  + DisplayName: string;
-  + Description: string;
-  + Icon: Sprite;
-  - Max_Level: [SerializeField][ReadOnly] int;
-  + ConditionData: ConditionData;
-  + EffectDefinition: EffectDefinition;
-  + EffectData: EffectData;
 
 Funções:
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Header()
-  - Header()
-  - Tooltip()
-  - Tooltip()
+  + Calculate()
 
 Conexões:
-  ConditionData,
+  CombatPerkInstance,
+  CombatPerkRuntime,
+  EffectData,
+  EffectDefinition,
+  PlayerBuildStats,
+
+**## CriticalDamageModifier**
+
+Variaveis:
+
+Funções:
+  + Calculate()
+
+Conexões:
+  CombatPerkInstance,
+  CombatPerkRuntime,
+  EffectData,
+  EffectDefinition,
+  PlayerBuildStats,
+
+**## DamageDealtModifier**
+
+Variaveis:
+
+Funções:
+  + Calculate()
+
+Conexões:
+  CombatPerkInstance,
+  CombatPerkRuntime,
+  PlayerCombatStats,
   EffectData,
   EffectDefinition,
 
-**## RuneDatabase**
+**## CombatPerkInstance**
 
 Variaveis:
-  + Runes: List<RuneDefinition>;
 
 Funções:
-  + new()
+  + CombatPerkInstance()
 
 Conexões:
-  RuneDefinition,
+  ICondition,
+  EffectDefinition,
 
-**## RuneDefinition**
+**## CombatPerkRuntime**
 
 Variaveis:
-  + Id: string;
-  + DisplayName: string;
-  + Description: string;
-  + Icon: Sprite;
-  + SlotType: RuneSlotType;
-  + Perk: PerkDefinition;
 
 Funções:
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
 
 Conexões:
-  PerkDefinition,
+  CombatEvent,
+  CombatPerkInstance,
+  PlayerCombatStats,
+  ConditionData,
+  EffectData,
+  BuildPerkSummary,
+  PlayerBuildStats,
 
-**## HuntConfig**
+**## CombatDamageService**
 
 Variaveis:
-  + BehemothDatabase: BehemothDatabase;
-  + DropTableDatabase: DropTableDatabase;
-  + ItemDatabase: ItemDatabase;
-  + BehemothIds: string[];
-  + RespawnDelay: float;
+  - _attackDamageModifier: readonly AttackDamageModifier;
+  - _criticalChanceModifier: readonly CriticalChanceModifier;
+  - _criticalDamageModifier: readonly CriticalDamageModifier;
+  - _damageDealtModifier: readonly DamageDealtModifier;
 
 Funções:
-  - Header()
-  - Header()
-  - Header()
+  + CombatDamageService()
+  + CalculateDamage()
+  - RollCritical()
+  - GetCriticalMultiplier()
 
 Conexões:
-  DropTableDatabase,
-  ItemDatabase,
-  BehemothDatabase,
+  DamageEntry,
+  AttackDamageModifier,
+  CriticalChanceModifier,
+  CriticalDamageModifier,
+  DamageDealtModifier,
+  DamageResult,
+  PlayerCombatStats,
+  PlayerBuildStats,
+
+**## DamageResult**
+
+Variaveis:
+
+Funções:
+  + DamageResult()
+
+Conexões:
 
 **## HuntArea**
 
@@ -1595,7 +1593,6 @@ Variaveis:
 
 Funções:
   + Cachorro()
-  + Cachorro()
   + SetNome()
   + GetNome()
 
@@ -1612,6 +1609,23 @@ Funções:
 Conexões:
   Cachorro,
 
+**## HuntConfig**
+
+Variaveis:
+  + BehemothDatabase: BehemothDatabase;
+  + DropTableDatabase: DropTableDatabase;
+  + ItemDatabase: ItemDatabase;
+  + BehemothIds: string[];
+  + RespawnDelay: float;
+
+Funções:
+  - Header()
+
+Conexões:
+  DropTableDatabase,
+  ItemDatabase,
+  BehemothDatabase,
+
 **## HuntManager**
 
 Variaveis:
@@ -1620,11 +1634,6 @@ Variaveis:
   - areas: [SerializeField] private List<HuntArea>;
   - aliveBehemoths: [SerializeField] private HashSet<string>;
   + AliveBehemoths: HashSet<string>;
-  - _dropTableRepository: IDropTableRepository;
-  - _dropService: DropService;
-  - _itemRepository: IItemRepository;
-  + DropTableRepository: IDropTableRepository;
-  + DropService: DropService;
 
 Funções:
   + Spawned()
@@ -1638,139 +1647,10 @@ Funções:
   - PrintInventory()
 
 Conexões:
-  RewardService,
-  DropTableDatabase,
-  ItemDatabase,
-  DropService,
-  DropTableRepository,
-  IDropTableRepository,
-  IItemRepository,
-  ItemRepository,
   BehemothController,
   BehemothDatabase,
-  HuntConfig,
   HuntArea,
-  InventoryService,
-
-**## AttackDamageModifier**
-
-Variaveis:
-
-Funções:
-  + Calculate()
-  + ResolvePerks()
-
-Conexões:
-  CombatPerkInstance,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  ICondition,
-  EffectDefinition,
-
-**## CriticalChanceModifier**
-
-Variaveis:
-
-Funções:
-  + Calculate()
-
-Conexões:
-  CombatPerkInstance,
-  CombatPerkRuntime,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  EffectData,
-  EffectDefinition,
-
-**## CriticalDamageModifier**
-
-Variaveis:
-
-Funções:
-  + Calculate()
-
-Conexões:
-  CombatPerkInstance,
-  CombatPerkRuntime,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  EffectData,
-  EffectDefinition,
-
-**## DamageDealtModifier**
-
-Variaveis:
-
-Funções:
-  + Calculate()
-
-Conexões:
-  CombatPerkInstance,
-  CombatPerkRuntime,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  EffectData,
-  EffectDefinition,
-
-**## CombatPerkInstance**
-
-Variaveis:
-
-Funções:
-  + CombatPerkInstance()
-
-Conexões:
-  ICondition,
-  EffectDefinition,
-
-**## CombatPerkRuntime**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-  CombatEvent,
-  CombatPerkInstance,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  ConditionData,
-  EffectData,
-  BuildPerkSummary,
-  PlayerBuildStats,
-
-**## CombatDamageService**
-
-Variaveis:
-  - _attackDamageModifier: readonly AttackDamageModifier;
-  - _criticalChanceModifier: readonly CriticalChanceModifier;
-  - _criticalDamageModifier: readonly CriticalDamageModifier;
-  - _damageDealtModifier: readonly DamageDealtModifier;
-
-Funções:
-  + CombatDamageService()
-  + CalculateDamage()
-  - RollCritical()
-  - GetCriticalMultiplier()
-
-Conexões:
-  DamageEntry,
-  AttackDamageModifier,
-  CriticalChanceModifier,
-  CriticalDamageModifier,
-  DamageDealtModifier,
-  DamageResult,
-  PlayerCombatStats,
-  PlayerCombatStats,
-
-**## DamageResult**
-
-Variaveis:
-
-Funções:
-  + DamageResult()
-
-Conexões:
+  HuntConfig,
 
 **## InventoryService**
 
@@ -1779,19 +1659,11 @@ Variaveis:
   - _itemDatabase: readonly IItemRepository;
 
 Funções:
-  + InventoryService()
-  + AddItem()
-  + RemoveItem()
-  + HasItem()
-  + HasItem()
-  + GetAmount()
-  + GetInventoryData()
 
 Conexões:
   ItemDefinition,
   IItemRepository,
   ItemStack,
-  PlayerProfileRuntime,
   PlayerInventoryData,
 
 **## ItemStack**
@@ -1812,69 +1684,18 @@ Variaveis:
 
 Funções:
   + Spawned()
-  - InitializeLocalPlayer()
+  + SetPlayerProfileData()
+  + SetPlayerBuild()
+  - Start()
   + UpdateCombatStats()
 
 Conexões:
+  RPC_Teste,
   PlayerNetworkState,
-  LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerCombatStats,
   PlayerCombatStats,
   PlayerConsumables,
   PlayerHealth,
-
-**## PlayerInputHandler**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-  ConnectionHandler,
-  OrbitCamera,
-  main,
-  NetworkInputData,
-
-**## PlayerInputHandler**
-
-Variaveis:
-  - jumpKey: [SerializeField] public KeyCode;
-  - lightAttackKey: [SerializeField] private KeyCode;
-  - heavyAttackKey: [SerializeField] private KeyCode;
-  - interactKey: [SerializeField] private KeyCode;
-  - slot1Key: [SerializeField] private KeyCode;
-  - slot2Key: [SerializeField] private KeyCode;
-  - slot3Key: [SerializeField] private KeyCode;
-  - slot4Key: [SerializeField] private KeyCode;
-  - inputDeadzone: [SerializeField] private float;
-  - mainCamera: Camera;
-  - cachedInputDirection: Vector3;
-  - cachedCameraForward: Vector3;
-  - cachedCameraRight: Vector3;
-  - cachedHorizontal: float;
-  - cachedVertical: float;
-  - cachedInputMagnitude: float;
-  - MAX_INPUT_MAGNITUDE: const float;
-  - MIN_DEADZONE: const float;
-  - MAX_DEADZONE: const float;
-
-Funções:
-  - Header()
-  + Spawned()
-  - ValidateSettings()
-  - RegisterLocalInput()
-  - SetupLocalCamera()
-  + GetLocalInput()
-  - CalculateCameraRelativeDirection()
-  - ValidateMoveDirection()
-  + GetMainCamera()
-
-Conexões:
-  ConnectionHandler,
-  OrbitCamera,
-  main,
-  NetworkInputData,
+  PlayerProfileData,
 
 **## NetworkInputData**
 
@@ -1905,14 +1726,6 @@ Variaveis:
 
 Funções:
   + IsSet()
-  + IsSet()
-  + IsSet()
-  + IsSet()
-  + IsSet()
-  + IsSet()
-  + IsSet()
-  + IsSet()
-  + IsSet()
 
 Conexões:
 
@@ -1922,8 +1735,6 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
-  - Header()
   + Spawned()
   + SetDowned()
   + SetUsingConsumable()
@@ -1931,18 +1742,17 @@ Funções:
 
 Conexões:
 
-**## LocalPlayerRuntime**
+**## PlayerInputHandler**
 
 Variaveis:
 
 Funções:
 
 Conexões:
-  PlayerNetworkState,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  PlayerConsumables,
-  PlayerHealth,
+  OrbitCamera,
+  main,
+  NetworkInputData,
+  ConnectionHandler,
 
 **## LocalPlayerRuntime**
 
@@ -1959,25 +1769,22 @@ Funções:
 Conexões:
   PlayerRoot,
   PlayerCombatStats,
-  PlayerCombatStats,
 
-**## PlayerProfileRuntime**
+**## PlayerBuildLoader**
 
 Variaveis:
-  + OnBuildStatsChanged: event Action;
+  - _debugBootstrapGO: GameObject;
   - _debugBootstrap: BuildDebugBootstrap;
   - _useDebugBootstrap: bool;
+  - Profile: PlayerProfileData;
 
 Funções:
-  - Awake()
-  + RaiseBuildStatsChanged()
+  + PlayerBuildLoader()
   - LoadDebugData()
 
 Conexões:
   BuildDebugBootstrap,
-  PlayerCombatSynchronizer,
   PlayerBuildData,
-  PlayerBuildStats,
   PlayerProfileData,
 
 **## PlayerAttack**
@@ -1995,10 +1802,6 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
-  - Header()
-  - Header()
-  - Header()
   - new()
   + Spawned()
   + SubscribeGetWeaponData()
@@ -2015,7 +1818,6 @@ Funções:
   - DrawDebugAttackSphere()
   - Rpc()
   - RPC_ShowAttackSphere()
-  - Rpc()
   - RPC_ShowAttackFeedback()
   - ShowLocalAttackSphere()
   - DestroySphereRoutine()
@@ -2029,19 +1831,22 @@ Conexões:
   AttackData,
   WeaponData,
   GameServices,
+  EquipmentService,
   BehemothController,
   BehemothPart,
   CameraShake,
-  main,
+  CombatDamageService,
   DamageResult,
+  main,
   PlayerRoot,
   NetworkInputData,
   LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerProfileRuntime,
   PlayerCombatStats,
-  PlayerCombatStats,
+  ConnectionHandler,
   DamageAnimator,
+  PlayerBuildStats,
+  PlayerProfileData,
+  EquipmentSlotData,
 
 **## PlayerBaseStats**
 
@@ -2061,7 +1866,6 @@ Conexões:
   CombatPerkInstance,
   CombatPerkRuntime,
   CombatConsumableInstance,
-  CombatConsumableInstance,
   ConditionData,
   ICondition,
   EffectData,
@@ -2078,73 +1882,6 @@ Funções:
 
 Conexões:
   ConsumableDefinition,
-
-**## PlayerCombatStats**
-
-Variaveis:
-  - PerkSummaryList: List<BuildPerkSummary>;
-  - _conditions: readonly List<ICondition>;
-  - ConsumablesList: List<BuildConsumableSummary>;
-
-Funções:
-  - new()
-  + ApplyBuild()
-  - ResolvePerks()
-  - CreateCondition()
-  - CreateConditionRuntime()
-  - OnConditionChanged()
-  - ResolveConsumables()
-  - ClearRuntimeState()
-  + Despawned()
-
-Conexões:
-  CombatEventDispatcher,
-  CombatPerkInstance,
-  CombatConsumableInstance,
-  CombatConsumableInstance,
-  ConditionData,
-  ConditionDefinition,
-  ICondition,
-  NotHitRecentlyConditionDefinition,
-  NotHitRecentlyConditionRuntime,
-  EffectData,
-  EffectDefinition,
-  BuildConsumableSummary,
-  BuildPerkSummary,
-  PlayerBuildStats,
-
-**## CombatConsumableInstance**
-
-Variaveis:
-
-Funções:
-  + CombatConsumableInstance()
-
-Conexões:
-  ConsumableDefinition,
-
-**## PlayerCombatSynchronizer**
-
-Variaveis:
-  - _combatStats: [SerializeField, ReadOnly] private PlayerCombatStats;
-
-Funções:
-  + Spawned()
-  + EventSubscribe()
-  + Despawned()
-  + Dispose()
-  - SyncBuild()
-  - IsInHunt()
-
-Conexões:
-  GameServices,
-  LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerProfileRuntime,
-  PlayerAttack,
-  PlayerCombatStats,
-  PlayerCombatStats,
-  PlayerBuildStats,
 
 **## ConsumableUseState**
 
@@ -2168,7 +1905,6 @@ Variaveis:
 
 Funções:
   - new()
-  - new()
   + FixedUpdateNetwork()
   - Rpc()
   - RPC_UseSlot()
@@ -2177,19 +1913,16 @@ Funções:
 
 Conexões:
   GameServices,
-  ConnectionHandler,
   PlayerRoot,
   NetworkInputData,
   PlayerNetworkState,
   LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerProfileRuntime,
-  PlayerCombatStats,
-  CombatConsumableInstance,
   PlayerCombatStats,
   CombatConsumableInstance,
   ConsumableUseState,
+  ConnectionHandler,
   ConsumableDefinition,
+  ConsumableService,
   EffectData,
   EffectDefinition,
   OwnedConsumableData,
@@ -2227,8 +1960,6 @@ Conexões:
   InteractionConfig,
   PlayerNetworkState,
   LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerCombatStats,
   PlayerCombatStats,
   CombatStats,
   DownedPlayerUI,
@@ -2246,9 +1977,7 @@ Funções:
   - FindInteractable()
   - Rpc()
   - RPC_InteractStart()
-  - Rpc()
   - RPC_InteractTick()
-  - Rpc()
   - RPC_InteractStop()
 
 Conexões:
@@ -2277,9 +2006,6 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
-  - Header()
-  - Header()
   + Spawned()
   - CacheReferences()
   - ValidateSettings()
@@ -2298,7 +2024,6 @@ Conexões:
   PlayerNetworkState,
   PlayerAttack,
   PlayerHealth,
-  PlayerAnimationStateMachine,
   PlayerAnimationStateMachine,
 
 **## PlayerStatsTester**
@@ -2334,59 +2059,11 @@ Funções:
 Conexões:
   PlayerNetworkState,
 
-**## PlayerAnimationStateMachine**
-
-Variaveis:
-  - animator: [SerializeField] private Animator;
-  - playerAttack: [SerializeField] private PlayerAttack;
-  - SprintHash: static readonly int;
-  - JumpAllHash: static readonly int;
-  - JumpWhileRunningHash: static readonly int;
-  - DownedHash: static readonly int;
-  - UsingConsumableHash: static readonly int;
-  - GatheringHash: static readonly int;
-  - AttackHash: static readonly int;
-  - LightAttackHash: static readonly int;
-  - HeavyAttackHash: static readonly int;
-  - _lastAttackSequence: int;
-
-Funções:
-  - Header()
-  - Header()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - StringToHash()
-  - Header()
-  - Awake()
-  - Update()
-  + ApplyNetworkState()
-  + ApplyAnimationState()
-  - ProcessAttackAnimationEvent()
-  - PlayAttackAnimation()
-  - ResetAnimatorParameters()
-  + GetCurrentVisualState()
-  + IsJumping()
-  + IsSprinting()
-
-Conexões:
-  PlayerNetworkState,
-  PlayerAttack,
-
 **## CombatStats**
 
 Variaveis:
 
 Funções:
-  + new()
-  + new()
-  + new()
-  + new()
   + new()
 
 Conexões:
@@ -2398,9 +2075,6 @@ Variaveis:
 
 Funções:
   + new()
-  + new()
-  + new()
-  + new()
 
 Conexões:
   Stat,
@@ -2410,11 +2084,6 @@ Conexões:
 Variaveis:
 
 Funções:
-  + new()
-  + new()
-  + new()
-  + new()
-  + new()
   + new()
 
 Conexões:
@@ -2426,9 +2095,6 @@ Variaveis:
   - _stats: readonly Dictionary<StatType, Stat>;
 
 Funções:
-  + new()
-  + new()
-  + new()
   + new()
   + PlayerStats()
   + GetStat()
@@ -2466,9 +2132,6 @@ Conexões:
 Variaveis:
 
 Funções:
-  + new()
-  + new()
-  + new()
   + new()
 
 Conexões:
@@ -2508,50 +2171,117 @@ Funções:
 
 Conexões:
 
-**## DamageAnimator**
+**## ConnectionHandler**
 
 Variaveis:
-  + Instance: static DamageAnimator;
-  - root: VisualElement;
-  - damageLayer: VisualElement;
-  - damageTranslateRange: [SerializeField] private float;
-  - damageUpwardsTranslate: [SerializeField] private float;
-  - damageDownwardsTranslate: [SerializeField] private float;
-  - damageDelayTranslate: [SerializeField] private int;
+  - instanciated: bool;
+  - runnerPrefab: NetworkRunner;
+  - runner: NetworkRunner;
+  - localPlayerInput: PlayerInputHandler;
+  - networkEvents: NetworkEvents;
+  - cachedInputData: NetworkInputData;
+  + Runner: NetworkRunner;
 
 Funções:
+  + LoadScene()
+  + Spawned()
+  + StartConnectionAsync()
+  + DisconnectAsync()
+  - CleanupRunnerObject()
+  + SetLocalPlayerInput()
+  - OnShutdownEventListener()
+  + OnPlayerJoined()
+  + OnPlayerLeft()
+  + OnInput()
+  + OnInputMissing()
+  + OnShutdown()
+  + OnConnectFailed()
+  + OnReliableDataReceived()
+  + OnReliableDataProgress()
+  + OnConnectedToServer()
+  + OnDisconnectedFromServer()
+  + OnConnectRequest()
+  + OnUserSimulationMessage()
+  + OnSessionListUpdated()
+  + OnCustomAuthenticationResponse()
+  + OnHostMigration()
+  + OnSceneLoadDone()
+  + OnSceneLoadStart()
+  + OnObjectExitAOI()
+  + OnObjectEnterAOI()
+
+Conexões:
+  NetworkPlayerManager,
+  PlayerRuntimeRegistry,
+  NetworkInputData,
+  PlayerInputHandler,
+
+**## InitializationHandler**
+
+Variaveis:
+  - _defaultLobbyName: [SerializeField] private string;
+  - _lobbyMaxPlayers: [SerializeField] private int;
+  - _initializeAsServer: [SerializeField] private bool;
+
+Funções:
+  - Header()
+  - Start()
+  + CheckAndStartConnection()
+  - CreateStartGameArgs()
+  - DetermineGameMode()
+
+Conexões:
+  ConnectionHandler,
+
+**## LobbyInputController**
+
+Variaveis:
+  - _matchmakingHandler: [SerializeField] private MatchmakingHandler;
+  + targetIsland: IslandType;
+  + targetMode: GameModeType;
+  + isPublic: bool;
+  + started: bool;
+
+Funções:
+  - Header()
   - Awake()
-  + ShowDamage()
-  - AnimateAndDestroy()
 
 Conexões:
+  MatchmakingHandler,
 
-**## MMAnimations**
+**## MatchmakingHandler**
+
+Variaveis:
+  + OnHuntRequest: static Action<bool, IslandType, GameModeType>;
+  - _connectionHandler: [SerializeField] private ConnectionHandler;
+  - _matchmakingService: [SerializeField] private MatchmakingService;
+  - _huntMaxPlayers: [SerializeField] private int;
+
+Funções:
+  - Header()
+  - Awake()
+  - OnDestroy()
+  + Spawned()
+  + RequestHunt()
+
+Conexões:
+  ConnectionHandler,
+  MatchmakingService,
+
+**## MatchmakingService**
 
 Variaveis:
 
 Funções:
-  + Rotate()
-  + Scale()
-  + Fade()
-  + AnimateStyleValues()
-
-Conexões:
-
-**## IScreen**
-
-Variaveis:
-
-Funções:
-  - OnEnable()
-  - OnDisable()
+  + CreateHuntSessionArgs()
+  - GetSceneIndex()
 
 Conexões:
 
 **## BuildScreen**
 
 Variaveis:
-  - _viewModel: BuildViewModel;
+  - _viewModel: [SerializeField] private BuildViewModel;
   - _document: UIDocument;
   - _root: VisualElement;
   - _buildName: Text;
@@ -2569,7 +2299,9 @@ Variaveis:
 
 Funções:
   - new()
+  - Awake()
   - OnEnable()
+  - OnDisable()
   - BindElements()
   - RegisterEvents()
   - HandleEquipButtonClicked()
@@ -2580,10 +2312,10 @@ Funções:
   - EquipRune()
   - UnequipRune()
   - OpenRuneSelectionPopup()
-  - Refresh()
-  - RefreshStatsContainer()
-  - RefreshEquipments()
-  - RefreshRunes()
+  - Refresh_UI()
+  - RefreshUIStatsContainer()
+  - RefreshUIEquipments()
+  - RefreshUIRunes()
   - BuildPerkComponent()
   - PupulateEquipItemButton()
 
@@ -2593,28 +2325,28 @@ Conexões:
   BuildPerkSummary,
   PlayerBuildData,
   PlayerBuildStats,
-  AH_Button,
-  RuneSelectionContext,
-  RuneSlotContext,
+  PlayerProfileData,
   EquipItemButton,
   EquipmentSelectionPopup,
   EquipmentStatusDrawer,
   RuneSelectionItem,
+  RuneSelectionContext,
+  RuneSlotContext,
+  AH_Button,
 
 **## BuildViewModel**
 
 Variaveis:
+  + PlayerProfileData: ObservableValue<PlayerProfileData>;
   - _buildService: PlayerBuildService;
   - _BuildCalculationService: BuildCalculationService;
   - _validation: BuildValidationService;
   - _runeService: RuneService;
-  - currentActiveBuild: PlayerBuildData;
-  - playerBuildData: List<PlayerBuildData>;
+  - playerBuilds: [SerializeField] private List<PlayerBuildData>;
 
 Funções:
   + Initialize()
   + SelectBuild()
-  + GetPlayerBuildData()
   + EquipAnEquipment()
   + UnequipAnEquipment()
   + GetBuildEquipments()
@@ -2626,28 +2358,30 @@ Funções:
   + GetPlayerAvailableRunes()
   + EquipRune()
   + UnequipRune()
-  + CalculateBuild()
+  + GetPlayerBuildStats()
 
 Conexões:
+  ObservableValue,
   EquipmentDefinition,
   BuildCalculationService,
   BuildValidationService,
   PlayerBuildService,
-  EquipmentService,
   GameServices,
+  EquipmentService,
+  RPC_Teste,
   RuneService,
   RuneDefinition,
-  PlayerProfileRuntime,
+  PlayerRoot,
   EquipmentSelectionItemStats,
   PlayerBuildData,
   PlayerBuildStats,
   OwnedEquipmentData,
   OwnedRuneData,
   PlayerProfileData,
+  EquipItemButton,
   RuneSelectionContext,
   RuneSlotContext,
   RuneSlotViewData,
-  EquipItemButton,
   EquipmentSlotData,
   RuneSlotData,
 
@@ -2731,7 +2465,6 @@ Funções:
 
 Conexões:
   ItemStack,
-  PlayerProfileRuntime,
   PlayerInventoryData,
 
 **## MainMenuScreen**
@@ -2750,41 +2483,6 @@ Funções:
 
 Conexões:
   UIManager,
-
-**## SettingsScreen**
-
-Variaveis:
-  - _viewModel: SettingsViewModel;
-  - _uiDocument: UIDocument;
-  - _root: VisualElement;
-  - _button1: AH_Button;
-  - _button2: AH_Button;
-  - _button3: AH_Button;
-
-Funções:
-  - OnEnable()
-  - OnFullHDClicked()
-  - OnHDClicked()
-  - OnSDClicked()
-
-Conexões:
-  SettingsViewModel,
-  AH_Button,
-
-**## SettingsViewModel**
-
-Variaveis:
-  - _displaySettingsService: DisplaySettingsService;
-
-Funções:
-  + Initialize()
-  + ApplyFullHD()
-  + ApplyHD()
-  + ApplySD()
-
-Conexões:
-  GameServices,
-  DisplaySettingsService,
 
 **## DownedPlayerUI**
 
@@ -2805,7 +2503,6 @@ Variaveis:
 Funções:
   - Header()
   - new()
-  - Header()
   - Awake()
   - OnEnable()
   - LateUpdate()
@@ -2843,7 +2540,6 @@ Variaveis:
 
 Funções:
   - Header()
-  - Header()
   - OnEnable()
   + SetTarget()
   + SetProgress()
@@ -2870,45 +2566,80 @@ Conexões:
   HealthView,
   HealthViewModel,
 
-**## ConsumableRepository**
+**## SettingsScreen**
 
 Variaveis:
-  - database: ConsumableDatabase;
+  - _viewModel: SettingsViewModel;
+  - _uiDocument: UIDocument;
+  - _root: VisualElement;
+  - _button1: AH_Button;
+  - _button2: AH_Button;
+  - _button3: AH_Button;
 
 Funções:
-  + ConsumableRepository()
-  + GetById()
-  + GetAll()
+  - OnEnable()
+  - OnFullHDClicked()
+  - OnHDClicked()
+  - OnSDClicked()
 
 Conexões:
-  ConsumableDatabase,
-  ConsumableDefinition,
+  SettingsViewModel,
+  AH_Button,
 
-**## ConsumableService**
+**## SettingsViewModel**
 
 Variaveis:
-  - _consumableDatabase: readonly IConsumableRepository;
+  - _displaySettingsService: DisplaySettingsService;
 
 Funções:
-  + ConsumableService()
-  + GetConsumable()
-  + CanUseConsumable()
+  + Initialize()
+  + ApplyFullHD()
+  + ApplyHD()
+  + ApplySD()
 
 Conexões:
-  IConsumableRepository,
-  ConsumableDefinition,
-  OwnedConsumableData,
+  GameServices,
+  DisplaySettingsService,
 
-**## IConsumableRepository**
+**## DamageAnimator**
+
+Variaveis:
+  + Instance: static DamageAnimator;
+  - root: VisualElement;
+  - damageLayer: VisualElement;
+  - damageTranslateRange: [SerializeField] private float;
+  - damageUpwardsTranslate: [SerializeField] private float;
+  - damageDownwardsTranslate: [SerializeField] private float;
+  - damageDelayTranslate: [SerializeField] private int;
+
+Funções:
+  - Awake()
+  + ShowDamage()
+  - AnimateAndDestroy()
+
+Conexões:
+
+**## MMAnimations**
 
 Variaveis:
 
 Funções:
-  - GetById()
-  - GetAll()
+  + Rotate()
+  + Scale()
+  + Fade()
+  + AnimateStyleValues()
 
 Conexões:
-  ConsumableDefinition,
+
+**## IScreen**
+
+Variaveis:
+
+Funções:
+  - OnEnable()
+  - OnDisable()
+
+Conexões:
 
 **## ConsumableDatabase**
 
@@ -2934,10 +2665,7 @@ Variaveis:
 
 Funções:
   - Tooltip()
-  - Tooltip()
   - Header()
-  - Header()
-  - Tooltip()
   + UseConsumable()
   + GetDurationByLevel()
 
@@ -2946,45 +2674,45 @@ Conexões:
   EffectDefinition,
   OwnedConsumableData,
 
-**## ConditionData**
+**## ConsumableRepository**
 
 Variaveis:
-  + Definition: ConditionDefinition;
-  + ConditionType: ConditionType;
+  - database: ConsumableDatabase;
 
 Funções:
-  - Tooltip()
-  - Tooltip()
+  + ConsumableRepository()
+  + GetById()
+  + GetAll()
 
 Conexões:
-  ConditionDefinition,
+  ConsumableDatabase,
+  ConsumableDefinition,
 
-**## ConditionDefinition**
+**## ConsumableService**
 
 Variaveis:
-  + Id: string;
-  + DisplayName: string;
-  + Description: string;
+  - _consumableDatabase: readonly IConsumableRepository;
 
 Funções:
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - OnValidate()
+  + ConsumableService()
+  + GetConsumable()
+  + CanUseConsumable()
 
 Conexões:
+  ConsumableDefinition,
+  IConsumableRepository,
+  OwnedConsumableData,
 
-**## ICondition**
+**## IConsumableRepository**
 
 Variaveis:
-  + OnChange: event Action<bool>;
 
 Funções:
-  + OnCombatEventReceive()
-  + Initialize()
+  - GetById()
+  - GetAll()
 
 Conexões:
-  CombatEvent,
+  ConsumableDefinition,
 
 **## NotHitRecentlyConditionDefinition**
 
@@ -3021,6 +2749,43 @@ Conexões:
   CombatEvent,
   TimeScheduler,
 
+**## ConditionData**
+
+Variaveis:
+  + Definition: ConditionDefinition;
+  + ConditionType: ConditionType;
+
+Funções:
+  - Tooltip()
+
+Conexões:
+  ConditionDefinition,
+
+**## ConditionDefinition**
+
+Variaveis:
+  + Id: string;
+  + DisplayName: string;
+  + Description: string;
+
+Funções:
+  - Tooltip()
+  - OnValidate()
+
+Conexões:
+
+**## ICondition**
+
+Variaveis:
+  + OnChange: event Action<bool>;
+
+Funções:
+  + OnCombatEventReceive()
+  + Initialize()
+
+Conexões:
+  CombatEvent,
+
 **## EffectData**
 
 Variaveis:
@@ -3028,7 +2793,6 @@ Variaveis:
   + EffectTargetType: EffectTargetType;
 
 Funções:
-  - Tooltip()
   - Tooltip()
 
 Conexões:
@@ -3043,10 +2807,6 @@ Variaveis:
   + ModifierType: ModifierType;
 
 Funções:
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
-  - Tooltip()
   - Tooltip()
   + Execute()
 
@@ -3072,7 +2832,6 @@ Funções:
 Conexões:
   PlayerRoot,
   PlayerNetworkState,
-  LocalPlayerRuntime,
   LocalPlayerRuntime,
   PlayerHealth,
 
@@ -3155,9 +2914,8 @@ Conexões:
 **## PlayerBuildCollectionData**
 
 Variaveis:
-  + ActiveBuildId: string;
   + UnlockedBuildSlots: int;
-  - _builds: readonly List<PlayerBuildData>;
+  - _builds: [field: SerializeField] private List<PlayerBuildData>;
   + Builds: List<PlayerBuildData>;
 
 Funções:
@@ -3181,8 +2939,6 @@ Variaveis:
 
 Funções:
   + new()
-  + new()
-  + new()
 
 Conexões:
   ConsumableSlotData,
@@ -3192,70 +2948,19 @@ Conexões:
 **## PlayerBuildStats**
 
 Variaveis:
-  + PerkSummaryList: List<BuildPerkSummary>;
-  + Consumables: List<BuildConsumableSummary>;
+  - PerkSummaryList: [field: SerializeField] public List<BuildPerkSummary>;
+  - ConsumablesList: [field: SerializeField] public List<BuildConsumableSummary>;
+  - _conditions: readonly List<ICondition>;
 
 Funções:
-  + new()
-  + new()
+  - new()
 
 Conexões:
+  CombatPerkInstance,
+  CombatConsumableInstance,
+  ICondition,
   BuildConsumableSummary,
   BuildPerkSummary,
-
-**## MMProgressBar**
-
-Variaveis:
-  + UssClassName: const string;
-  + TrackUssClassName: const string;
-  + FillUssClassName: const string;
-  + BlueStripe: const string;
-  + YellowStripe: const string;
-  + GreenStripe: const string;
-  + NitroStripe: const string;
-  + TextUssClassName: const string;
-  - _track: VisualElement;
-  - _fill: VisualElement;
-  - _progressText: MMText;
-  - _minValue: float;
-  - _maxValue: float;
-  - _value: float;
-  - _showCheck: bool;
-  - _stripe: StripeVariant;
-
-Funções:
-  + MMProgressBar()
-  + SetValue()
-  - UpdateFill()
-
-Conexões:
-  MMText,
-
-**## AH_Button**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-
-**## MMIconButton**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-  MMIcon,
-
-**## MMTextButton**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-  MMText,
 
 **## OwnedConsumableData**
 
@@ -3311,6 +3016,7 @@ Conexões:
 
 Variaveis:
   - _equipments: readonly Dictionary<string, OwnedEquipmentData>;
+  - _ownedEquipments: [SerializeField] private List<OwnedEquipmentData>;
   + Equipments: IReadOnlyDictionary<string, OwnedEquipmentData>;
 
 Funções:
@@ -3320,6 +3026,7 @@ Funções:
   + Set()
   + Get()
   + Remove()
+  - SyncInspectorList()
 
 Conexões:
   OwnedEquipmentData,
@@ -3346,6 +3053,7 @@ Conexões:
 **## PlayerProfileData**
 
 Variaveis:
+  + OnChanged: Action<PlayerProfileData>;
 
 Funções:
   + PlayerProfileData()
@@ -3374,133 +3082,6 @@ Funções:
 
 Conexões:
   OwnedRuneData,
-
-**## MMGridView**
-
-Variaveis:
-  + GridContainerName: const string;
-  + UssClassName: const string;
-  + GridContainerUssClassName: const string;
-  + GridContainerVerticalUssClassName: const string;
-  + GridContainerHorizontalUssClassName: const string;
-  - _gridContainer: readonly VisualElement;
-  + contentContainer: override VisualElement;
-
-Funções:
-  + MMGridView()
-  + MMGridView()
-  - ApplyGridDirectionModifier()
-
-Conexões:
-
-**## MMTimer**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-  MMIcon,
-  MMText,
-
-**## MMTimerTag**
-
-Variaveis:
-
-Funções:
-
-Conexões:
-  MMText,
-
-**## MMIcon**
-
-Variaveis:
-  + UssClassName: const string;
-  + PrimaryUssClassName: const string;
-  - AppUIClassName: const string;
-  - IconClassName: const string;
-  - _iconName: string;
-  - _size: IconSize;
-  - _variant: IconVariant;
-
-Funções:
-  + MMIcon()
-  + GetSizeUssClassName()
-  - VariantToString()
-
-Conexões:
-
-**## MMText**
-
-Variaveis:
-  + UssClassName: const string;
-  + UssShadowClassName: const string;
-  + UssStrokeClassName: const string;
-  + UssTextClassName: const string;
-  + RemoveLocalizedText: const string;
-  - _shadow: readonly Label;
-  - _stroke: readonly Label;
-  - _text: readonly Label;
-  - _lineHeight: float;
-  - m_TextValue: string;
-  - m_TypographyStyle: TypographyStyle;
-  - m_OutlineSize: TextOutlineSize;
-  - m_HasShadow: bool;
-
-Funções:
-  + MMText()
-  - GetOutlineClassName()
-  - GetStyleClassName()
-
-Conexões:
-
-**## ScreenRootElement**
-
-Variaveis:
-
-Funções:
-  + ScreenRootElement()
-
-Conexões:
-
-**## RuneSelectionContext**
-
-Variaveis:
-  + RuneDefinition: RuneDefinition;
-  + OwnedRune: OwnedRuneData;
-  + InfusedIn: string;
-
-Funções:
-
-Conexões:
-  RuneDefinition,
-  OwnedRuneData,
-
-**## RuneSlotContext**
-
-Variaveis:
-  + BuildId: string;
-  + EquipmentType: EquipmentType;
-  + SlotIndex: int;
-  + SlotType: RuneSlotType;
-
-Funções:
-
-Conexões:
-
-**## RuneSlotViewData**
-
-Variaveis:
-  + Context: RuneSlotContext;
-  + EquippedRune: RuneDefinition;
-  + RuneLevel: int;
-  + IsEmpty: bool;
-
-Funções:
-
-Conexões:
-  RuneDefinition,
-  RuneSlotContext,
 
 **## EquipItemButton**
 
@@ -3562,7 +3143,7 @@ Variaveis:
   + OnEquipmentSelected: event Action<string>;
   - _title: Label;
   + _scrollView: ScrollView;
-  + OnUnequipRuneButtonClicked: event Action<EquipmentType, int>;
+  + OnUnequipRuneButtonClicked: event Action<RuneSlotContext, int>;
   + OnUnequipEquipButtonClicked: event Action;
 
 Funções:
@@ -3573,11 +3154,11 @@ Funções:
 
 Conexões:
   EquipmentSelectionItemStats,
-  AH_Button,
-  RuneSelectionContext,
-  RuneSlotContext,
   EquipmentSelectionItem,
   RuneSelectionItem,
+  RuneSelectionContext,
+  RuneSlotContext,
+  AH_Button,
 
 **## EquipmentStatusDrawer**
 
@@ -3604,10 +3185,10 @@ Funções:
 Conexões:
   EquipmentDefinition,
   EquipmentSelectionItemStats,
-  AH_Button,
+  RuneSelectionItem,
   RuneSlotContext,
   RuneSlotViewData,
-  RuneSelectionItem,
+  AH_Button,
 
 **## RuneSelectionItem**
 
@@ -3641,6 +3222,46 @@ Funções:
 Conexões:
   RuneDefinition,
   RuneSelectionContext,
+  RuneSlotContext,
+
+**## RuneSelectionContext**
+
+Variaveis:
+  + RuneDefinition: RuneDefinition;
+  + OwnedRune: OwnedRuneData;
+  + InfusedIn: string;
+
+Funções:
+
+Conexões:
+  RuneDefinition,
+  OwnedRuneData,
+
+**## RuneSlotContext**
+
+Variaveis:
+  + BuildId: string;
+  + EquipmentId: string;
+  + EquipmentType: EquipmentType;
+  + SlotIndex: int;
+  + SlotType: RuneSlotType;
+
+Funções:
+
+Conexões:
+
+**## RuneSlotViewData**
+
+Variaveis:
+  + Context: RuneSlotContext;
+  + EquippedRune: RuneDefinition;
+  + RuneLevel: int;
+  + IsEmpty: bool;
+
+Funções:
+
+Conexões:
+  RuneDefinition,
   RuneSlotContext,
 
 **## ConsumableComponent**
@@ -3740,18 +3361,15 @@ Funções:
   - UpdateConsumable()
   + GetEquippedConsumables()
   + GetConsumableDurationTime()
-  + GetOwnedConsumable()
 
 Conexões:
   ObservableValue,
   GameServices,
   PlayerRoot,
   LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerProfileRuntime,
   PlayerConsumables,
-  ConsumableService,
   ConsumableDefinition,
+  ConsumableService,
   PlayerBuildData,
   OwnedConsumableData,
   ConsumableSlotData,
@@ -3792,9 +3410,6 @@ Conexões:
   CombatEventDispatcher,
   ObservableValue,
   PlayerRoot,
-  LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerCombatStats,
   PlayerCombatStats,
   PlayerHealth,
 
@@ -3825,7 +3440,6 @@ Variaveis:
 
 Funções:
   + new()
-  - new()
   + Initialize()
   - RefreshPerks()
   - OnPerkActiveChanged()
@@ -3836,8 +3450,6 @@ Conexões:
   CombatPerkInstance,
   PlayerRoot,
   LocalPlayerRuntime,
-  LocalPlayerRuntime,
-  PlayerCombatStats,
   PlayerCombatStats,
   ICondition,
   EffectDefinition,
@@ -3864,6 +3476,147 @@ Funções:
 
 Conexões:
   main,
+
+**## AH_Button**
+
+Variaveis:
+
+Funções:
+
+Conexões:
+
+**## MMIconButton**
+
+Variaveis:
+
+Funções:
+
+Conexões:
+  MMIcon,
+
+**## MMTextButton**
+
+Variaveis:
+
+Funções:
+
+Conexões:
+  MMText,
+
+**## MMProgressBar**
+
+Variaveis:
+  + UssClassName: const string;
+  + TrackUssClassName: const string;
+  + FillUssClassName: const string;
+  + BlueStripe: const string;
+  + YellowStripe: const string;
+  + GreenStripe: const string;
+  + NitroStripe: const string;
+  + TextUssClassName: const string;
+  - _track: VisualElement;
+  - _fill: VisualElement;
+  - _progressText: MMText;
+  - _minValue: float;
+  - _maxValue: float;
+  - _value: float;
+  - _showCheck: bool;
+  - _stripe: StripeVariant;
+
+Funções:
+  + MMProgressBar()
+  + SetValue()
+  - UpdateFill()
+
+Conexões:
+  MMText,
+
+**## MMGridView**
+
+Variaveis:
+  + GridContainerName: const string;
+  + UssClassName: const string;
+  + GridContainerUssClassName: const string;
+  + GridContainerVerticalUssClassName: const string;
+  + GridContainerHorizontalUssClassName: const string;
+  - _gridContainer: readonly VisualElement;
+  + contentContainer: override VisualElement;
+
+Funções:
+  + MMGridView()
+  - ApplyGridDirectionModifier()
+
+Conexões:
+
+**## MMIcon**
+
+Variaveis:
+  + UssClassName: const string;
+  + PrimaryUssClassName: const string;
+  - AppUIClassName: const string;
+  - IconClassName: const string;
+  - _iconName: string;
+  - _size: IconSize;
+  - _variant: IconVariant;
+
+Funções:
+  + MMIcon()
+  + GetSizeUssClassName()
+  - VariantToString()
+
+Conexões:
+
+**## MMText**
+
+Variaveis:
+  + UssClassName: const string;
+  + UssShadowClassName: const string;
+  + UssStrokeClassName: const string;
+  + UssTextClassName: const string;
+  + RemoveLocalizedText: const string;
+  - _shadow: readonly Label;
+  - _stroke: readonly Label;
+  - _text: readonly Label;
+  - _lineHeight: float;
+  - m_TextValue: string;
+  - m_TypographyStyle: TypographyStyle;
+  - m_OutlineSize: TextOutlineSize;
+  - m_HasShadow: bool;
+
+Funções:
+  + MMText()
+  - GetOutlineClassName()
+  - GetStyleClassName()
+
+Conexões:
+
+**## ScreenRootElement**
+
+Variaveis:
+
+Funções:
+  + ScreenRootElement()
+
+Conexões:
+
+**## MMTimer**
+
+Variaveis:
+
+Funções:
+
+Conexões:
+  MMIcon,
+  MMText,
+
+**## MMTimerTag**
+
+Variaveis:
+
+Funções:
+
+Conexões:
+  MMText,
 
 **## ConsumableSlotData**
 
